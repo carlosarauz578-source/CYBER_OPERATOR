@@ -1,0 +1,392 @@
+╔════════════════════════════════════════════════════════════════════════════════╗
+║                                                                                ║
+║                     ESTADO ACTUAL (2026-11-08): esta guía heredada describe el flujo web anterior.
+Para la edición CLI, consulte README.md. Inicio rápido desde la raíz:
+
+    python3 -m pip install -r requirements.txt
+    python3 main.py --help
+    python3 main.py --list-sources
+    python3 main.py
+
+Kali no fue verificado durante el desarrollo en Windows. Las integraciones
+actuales son DNS, RDAP y crt.sh; los demás módulos listados a continuación
+pueden ser históricos y no deben interpretarse como conectores implementados.
+
+CYBER OPERATOR v0.1                                        ║
+║                 Intelligence Search Engine                                     ║
+║                  FOR CYBERSECURITY PROFESSIONALS                               ║
+║                                                                                ║
+╚════════════════════════════════════════════════════════════════════════════════╝
+
+QUICK START GUIDE
+═════════════════════════════════════════════════════════════════════════════════
+
+[1] INSTALLATION (Takes 2 minutes)
+────────────────────────────────────
+
+Open PowerShell or Terminal in this folder and run:
+
+    pip install -r requirements.txt
+
+Expected output: Successfully installed [packages list]
+
+
+[2] VERIFICATION (Takes 30 seconds)
+────────────────────────────────────
+
+Run:
+
+    python quick_test.py
+
+Expected output: ✓ Results: 7/7 test groups passed
+
+
+[3] START USING (Pick one option)
+────────────────────────────────────
+
+OPTION A - WEB INTERFACE (Recommended for beginners)
+    streamlit run cyber_operator/interface/app.py
+    → Opens in browser at http://localhost:8501
+    → Visual search with categories and source selection
+    → Real-time results and JSON/Markdown export
+
+OPTION B - COMMAND LINE (Recommended for scripting)
+    python -m cyber_operator.cli -t example.com
+    → Quick domain/IP investigation
+    → Terminal-based results
+    → Multiple output formats
+
+OPTION C - PYTHON API (Recommended for integration)
+    python3
+    >>> from cyber_operator.core import Orchestrator
+    >>> orchestrator = Orchestrator()
+    >>> results = orchestrator.execute_simple_query("example.com")
+    >>> print(results)
+
+
+EXAMPLE COMMANDS
+═════════════════════════════════════════════════════════════════════════════════
+
+CLI USAGE:
+
+1. Search a domain:
+   python -m cyber_operator.cli -t example.com
+
+2. Search with recommended sources only:
+   python -m cyber_operator.cli -t google.com --mode recommended
+
+3. List all available sources:
+   python -m cyber_operator.cli --list-sources
+
+4. List categories:
+   python -m cyber_operator.cli --list-categories
+
+5. Export as JSON:
+   python -m cyber_operator.cli -t target.com --format json
+
+6. Verbose output (debugging):
+   python -m cyber_operator.cli -t target.com --verbose
+
+
+WHAT YOU CAN DO RIGHT NOW (Without API Keys)
+═════════════════════════════════════════════════════════════════════════════════
+
+✓ Resolve domains to IPs (A/AAAA records)
+✓ Find mail servers (MX records)
+✓ Find nameservers (NS records)
+✓ Check TXT records (SPF/DMARC)
+✓ Reverse DNS lookups on IPs
+✓ RDAP registration data lookups
+✓ Certificate Transparency searches
+✓ Subdomain enumeration via certificates
+✓ Automatic risk assessment
+✓ Query history & caching
+✓ Multiple export formats
+
+
+ACCESSING EACH COMPONENT
+═════════════════════════════════════════════════════════════════════════════════
+
+WEB INTERFACE:
+  File: cyber_operator/interface/app.py
+  Run:  streamlit run cyber_operator/interface/app.py
+  Access: http://localhost:8501
+  Features: Visual search, source selection, real-time results, exports
+
+CLI TOOL:
+  File: cyber_operator/cli.py
+  Run:  python -m cyber_operator.cli --help
+  Features: Command-line queries, multiple output formats, list functions
+
+PYTHON API:
+  File: cyber_operator/core/orchestrator.py
+  Usage: from cyber_operator.core import Orchestrator
+  Features: Programmatic access to all functions
+
+DATABASE:
+  File: cyber_operator.db (auto-created)
+  Queries: Query history, result caching, statistics
+  View:   Use sqlite3 browser or Python: 
+          from cyber_operator.database import DatabaseManager
+          db = DatabaseManager()
+          db.get_query_history()
+
+
+DOCUMENTATION
+═════════════════════════════════════════════════════════════════════════════════
+
+READ THESE FILES:
+
+1. README.md
+   → What is Cyber Operator?
+   → Full feature list
+   → Installation & configuration
+   → Usage examples
+
+2. INSTALLATION.md
+   → Step-by-step setup (Windows/Linux/macOS)
+   → Troubleshooting
+   → Environment configuration
+
+3. INTEGRATION_STATUS.md
+   → What works right now (with ✓ marks)
+   → What's planned (with ⏳ marks)
+   → Data source capabilities
+   → API key requirements
+
+4. PROJECT_DELIVERY_SUMMARY.md
+   → Complete technical overview
+   → Architecture details
+   → File listing & descriptions
+   → Implementation decisions
+
+
+BASIC ARCHITECTURE
+═════════════════════════════════════════════════════════════════════════════════
+
+cyber_operator/
+│
+├── core/                          (Orchestration Engine)
+│   ├── orchestrator.py            Main coordinator
+│   ├── target_classifier.py       What type of target is this?
+│   ├── source_registry.py         Catalog of data sources
+│   ├── source_selector.py         Which sources to use?
+│   ├── query_engine.py            Execute queries concurrently
+│   └── result_aggregator.py       Correlate & analyze results
+│
+├── connectors/                    (Data Source Connectors)
+│   ├── dns_connector.py           DNS lookups (A, MX, NS, TXT, reverse)
+│   ├── rdap_connector.py          RDAP registration data
+│   └── crtsh_connector.py         Certificate Transparency (Crt.sh)
+│
+├── interface/                     (User Interfaces)
+│   └── app.py                     Streamlit web dashboard
+│
+├── cli.py                         Command-line interface
+│
+├── database/                      (Data Storage)
+│   └── database_manager.py        SQLite operations
+│
+├── config/                        (Configuration)
+│   └── config.py                  Environment & settings
+│
+├── utils/                         (Utilities)
+│   └── common.py                  Helper functions
+│
+└── tests/                         (Testing)
+    └── test_all.py               23 unit tests
+
+
+DATA FLOW
+═════════════════════════════════════════════════════════════════════════════════
+
+1. User submits query (target: "example.com")
+                     ↓
+2. Target Classifier identifies type (domain/IP/hash/email/etc.)
+                     ↓
+3. Source Selector chooses which sources to use
+                     ↓
+4. Query Engine executes connectors in parallel (DNS, RDAP, Crt.sh, etc.)
+                     ↓
+5. Each connector returns results
+                     ↓
+6. Result Aggregator correlates results + risk assessment
+                     ↓
+7. Database caches results
+                     ↓
+8. User receives unified results via Interface (Web/CLI/API)
+
+
+TROUBLESHOOTING
+═════════════════════════════════════════════════════════════════════════════════
+
+Problem: "No module named 'dnspython'"
+Solution: pip install -r requirements.txt
+
+Problem: "Port 8501 is already in use"
+Solution: streamlit run cyber_operator/interface/app.py --server.port 8502
+
+Problem: "Permission denied: python -m cyber_operator.cli"
+Solution: python -m cyber_operator.cli -t example.com (full syntax)
+
+Problem: "No results found"
+Reason:  Some targets may have no public records; try:
+        - Verify target is spelled correctly
+        - Use --verbose flag to see which sources ran
+        - Check INTEGRATION_STATUS.md for limitations
+
+Problem: "Tests fail"
+Solution: Ensure Python 3.8+ and all dependencies installed:
+         pip install --upgrade -r requirements.txt
+
+
+CONFIGURATION
+═════════════════════════════════════════════════════════════════════════════════
+
+Optional API Keys:
+
+1. Copy .env.example to .env
+2. Add your API keys:
+   VIRUSTOTAL_API_KEY=your_key
+   ABUSEIPDB_API_KEY=your_key
+   SHODAN_API_KEY=your_key
+   URLSCAN_API_KEY=your_key
+
+3. Save & restart
+
+WITHOUT API KEYS: Works with DNS, RDAP, Crt.sh (no authentication)
+
+
+NEXT STEPS
+═════════════════════════════════════════════════════════════════════════════════
+
+IMMEDIATE (Right now):
+  1. Run: python quick_test.py
+  2. Run: streamlit run cyber_operator/interface/app.py
+  3. Search for example.com
+
+SHORT TERM (This week):
+  1. Read README.md & INTEGRATION_STATUS.md
+  2. Try all three interfaces (Web, CLI, API)
+  3. Explore all available sources
+  4. Check database/query history
+
+MEDIUM TERM (This month):
+  1. Configure .env with optional API keys (if desired)
+  2. Integrate into your workflow
+  3. Review connector code for customization
+  4. Report any issues or feature requests
+
+LONG TERM (Extending):
+  1. Add new connectors (see INTEGRATION_STATUS.md)
+  2. Custom target types
+  3. Integration with other tools
+  4. Batch queries
+  5. Advanced reporting
+
+
+KEY FEATURES AT A GLANCE
+═════════════════════════════════════════════════════════════════════════════════
+
+INTELLIGENCE GATHERING:
+  ✓ Automatic target type detection
+  ✓ Parallel concurrent queries
+  ✓ Cross-source result correlation
+  ✓ Risk assessment (LOW/MEDIUM/HIGH)
+
+DATA SOURCES:
+  ✓ DNS (fully working - no API key)
+  ✓ RDAP (fully working - no API key)
+  ✓ Certificate Transparency (fully working - no API key)
+  ⏳ VirusTotal (planned - requires API key)
+  ⏳ AbuseIPDB (planned - requires API key)
+  ⏳ Shodan (planned - requires API key)
+  ⏳ URLScan (planned - requires API key)
+
+INTERFACES:
+  ✓ Web Dashboard (Streamlit) - visual & interactive
+  ✓ CLI Tool - terminal-based & scriptable
+  ✓ Python API - programmatic access
+
+STORAGE:
+  ✓ Query history with timestamps
+  ✓ Result caching with TTL (1 hour default)
+  ✓ Source statistics & performance metrics
+  ✓ Automatic cleanup (90+ day retention)
+
+EXPORT:
+  ✓ JSON format
+  ✓ Markdown format
+  ✓ Console output
+  ✓ Web display
+
+
+PROJECT STATISTICS
+═════════════════════════════════════════════════════════════════════════════════
+
+Code:
+  - 27 Python files
+  - 3,287 lines of code
+  - 10 modules (core, connectors, interface, database, config, utils, tests)
+
+Quality:
+  - 23 unit tests
+  - 100% test pass rate
+  - Comprehensive error handling
+  - Input validation
+
+Documentation:
+  - 5 files
+  - 49+ pages
+  - Examples & troubleshooting
+  - Architecture & implementation details
+
+Size:
+  - Lightweight & modular
+  - SQLite database (~MB size)
+  - ~50MB installed with dependencies
+  - No heavy ML/AI libraries
+
+
+SUPPORT
+═════════════════════════════════════════════════════════════════════════════════
+
+DOCUMENTATION:
+  - README.md (main guide)
+  - INSTALLATION.md (setup guide)
+  - INTEGRATION_STATUS.md (features & limitations)
+  - PROJECT_DELIVERY_SUMMARY.md (technical details)
+
+CODE EXAMPLES:
+  - quick_test.py (usage examples)
+  - cyber_operator/tests/test_all.py (test cases)
+
+IN-TOOL HELP:
+  - Web interface has tooltips and help text
+  - CLI has: python -m cyber_operator.cli --help
+  - Python API has docstrings: help(Orchestrator)
+
+
+CONTACT / CONTRIBUTE
+═════════════════════════════════════════════════════════════════════════════════
+
+This is version 0.1 - a fully functional MVP.
+
+To add features or report issues:
+  1. Review INTEGRATION_STATUS.md (known limitations & planned features)
+  2. Check PROJECT_DELIVERY_SUMMARY.md (architecture for extension points)
+  3. Study cyber_operator/connectors/ (example connector pattern)
+  4. Implement new connectors following the same pattern
+
+
+═════════════════════════════════════════════════════════════════════════════════
+
+YOU ARE READY TO USE CYBER OPERATOR!
+
+Next step: Run one of these commands:
+
+  python quick_test.py
+  streamlit run cyber_operator/interface/app.py
+  python -m cyber_operator.cli -t example.com
+
+═════════════════════════════════════════════════════════════════════════════════

@@ -1,0 +1,2 @@
+# Optional dependency for the legacy Streamlit interface only.
+streamlit==1.31.1
